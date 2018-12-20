@@ -13,6 +13,7 @@ import tensorflow as tf
 from sklearn import metrics
 
 from cnn_model import TCNNConfig, TextCNN
+#from my_cnn_model import TextCNN
 from data.cnews_loader import read_vocab, read_category, batch_iter, process_file, build_vocab
 
 base_dir = 'data/cnews'
@@ -99,8 +100,7 @@ def train():
         print('Epoch:', epoch + 1)
         batch_train = batch_iter(x_train, y_train, config.batch_size)
         for x_batch, y_batch in batch_train:
-            feed_dict = feed_data(x_batch, y_batch, config.dropout_keep_prob)
-
+            feed_dict = {model.input_x: x_batch, model.input_y: y_batch, model.keep_prob: config.dropout_keep_prob}
             if total_batch % config.save_per_batch == 0:
                 # 每多少轮次将训练结果写入tensorboard scalar
                 s = session.run(merged_summary, feed_dict=feed_dict)
